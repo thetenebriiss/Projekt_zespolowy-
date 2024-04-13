@@ -63,6 +63,10 @@ function showQuestion(){
         button.innerHTML = answer.text;
         button.classList.add("btn");
         answerButtons.appendChild(button);
+        if(ansver.correct){
+            button.dataset.correct = answer.correct;
+        }
+        button addEventListener("click , selectAnswer");
     });
 }
 
@@ -74,5 +78,44 @@ function resetState(){
 
 
 }
+function selectAnswer(){
+    const selectedBtn = e.target;
+    const isCorrect = selectedBtn.dataset.correct === "true";
+    if(isCorrect){
+        selectedBth.classList.add("correct");
+        score++;
+    }else{
+        selectedBtn.classList.add("incorrect");
+    }
+    Array.from(answerButtons.children).forEach(button => {
+       if(button.dataset.correct === "true"){
+        button.classList.add("correct");
+       }
+    button.disabled = true;
+    });
+    nextButton.style.display = "block";
+}
+function showScore(){
+    resetState();
+    questionElement.inert = 'you scord ${score} out of ${questions.lenght}!';
+    nextButton.innerHTML = "play Again";
+    nextButton.style.display = "block";
+}
 
+function hendleNextButton(){
+    currentQuestionIndex++;
+    if(currentQuestionIndex < questions.length){
+        showQuestion()
+    }else{
+        showScore();
+    }
+}
+
+nextButton.addEventListener("click", ()=>{
+    if(currentQuestionIndex < questions.length){
+      hendleNextButton();  
+    }else{
+        startQuiz();
+    }
+})
 starQuiz();
